@@ -1,4 +1,6 @@
 ﻿
+using CleanArchitecture.Domain.Entities;
+using CleanArchitecture.Persistance.Context;
 using FluentValidation;
 using System.Net;
 
@@ -6,19 +8,27 @@ namespace CleanArchitecture.WebApi.Middleware
 {
     public sealed class ExceptionMiddleware : IMiddleware
     {
+        private readonly AppDbContext _context;
+
+        public ExceptionMiddleware(AppDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-			try
-			{
-				await next(context);
-            }
-			catch (Exception ex)
+            try
             {
-              await  HandleExceptionAsync(context, ex);
+                await next(context);
+            }
+            catch (Exception ex)
+            {
+                await LogExceptionToDatabaseAsync(ex, context.Request);
+                await HandleExceptionAsync(context, ex);
             }
         }
 
-        private Task  HandleExceptionAsync(HttpContext context, Exception ex)
+        private Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError; // 500 if unexpected
@@ -38,6 +48,21 @@ namespace CleanArchitecture.WebApi.Middleware
                 Message = ex.Message,
                 StatusCode = context.Response.StatusCode
             }.ToString());
+        }
+
+        private async Task LogExceptionToDatabaseAsync(Exception ex, HttpRequest request)
+        {
+            ErrorLog errorLog = new ErrorLog
+            {
+                ErrorMessage = ex.Message,
+                StacktTrace = ex.StackTrace,
+                RequestPath = request.Path,
+                RequestMethod = request.Method,
+                Timestamp = DateTime.Now
+            };
+
+            await _context.Set<ErrorLog>().AddAsync(errorLog, default);
+            await _context.SaveChangesAsync(default);
         }
     }
 }

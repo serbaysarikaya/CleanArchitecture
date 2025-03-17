@@ -3,17 +3,12 @@ using CleanArchitecture.Domain.Dtos;
 using CleanArchitecture.Presentation.Abstraction;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CleanArchitecture.Presentation.Controllers
 {
     public sealed class CarsController : ApiController
     {
-        public CarsController(IMediator mediator) : base(mediator)
-        {
-        }
+        public CarsController(IMediator mediator) : base(mediator) {}
 
         [HttpPost("[action]")]
         public async Task<IActionResult> CreateCar([FromBody] CreateCarCommand request, CancellationToken cancellationToken)
