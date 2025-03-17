@@ -2,11 +2,20 @@ using CleanArchitecture.Application.Services;
 using CleanArchitecture.Persistance.Services;
 using CleanArchitecture.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
+using MediatR;
+using CleanArchitecture.Application.Behaviors;
+using FluentValidation;
+using CleanArchitecture.WebApi.Middleware;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<ICarService, CarService>();
+
+builder.Services.AddTransient<ExceptionMiddleware>();
+
+builder.Services.AddAutoMapper(typeof
+    (CleanArchitecture.Persistance.AssemblyReferance).Assembly);
 
 string connectionString = builder.Configuration.GetConnectionString("SqlServer");
 
@@ -21,6 +30,11 @@ builder.Services.AddControllers()
 
 builder.Services.AddMediatR(cfr=>cfr.RegisterServicesFromAssembly(typeof(CleanArchitecture.Application.AssemblyReferance).Assembly));
 
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+builder.Services.AddValidatorsFromAssembly(typeof(CleanArchitecture.Application.AssemblyReferance).Assembly);
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -31,9 +45,11 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-  app.UseSwagger();
+    app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CleanArchitecture.WebApi v1"));
 }
+
+app.MiddlewareExtensions();
 
 app.UseHttpsRedirection();
 
