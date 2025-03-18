@@ -1,5 +1,6 @@
 using CleanArchitecture.Application.Behaviors;
 using CleanArchitecture.Application.Services;
+using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Repositories;
 using CleanArchitecture.Persistance.Context;
 using CleanArchitecture.Persistance.Repositories;
@@ -8,6 +9,7 @@ using CleanArchitecture.WebApi.Middleware;
 using FluentValidation;
 using GenericRepository;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -26,6 +28,8 @@ builder.Services.AddAutoMapper(typeof
 string connectionString = builder.Configuration.GetConnectionString("SqlServer");
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddIdentity<User,IdentityRole>().AddEntityFrameworkStores<AppDbContext>();// User artýk bizim AppDbContext Balandýgýný gösteriyot
 
 
 // Add services to the container. Assembyl refers to the CleanArchitecture.Presentation project
