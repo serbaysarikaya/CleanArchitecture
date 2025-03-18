@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CleanArchitecture.Application\CleanArchitecture.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="GenericEmailService">
+      <HintPath>..\..\..\..\..\Downloads\GenericEmailService-master\GenericEmailService-master\bin\Debug\net8.0\GenericEmailService.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
