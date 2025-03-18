@@ -1,11 +1,14 @@
-using CleanArchitecture.Application.Services;
-using CleanArchitecture.Persistance.Services;
-using CleanArchitecture.Persistance.Context;
-using Microsoft.EntityFrameworkCore;
-using MediatR;
 using CleanArchitecture.Application.Behaviors;
-using FluentValidation;
+using CleanArchitecture.Application.Services;
+using CleanArchitecture.Domain.Repositories;
+using CleanArchitecture.Persistance.Context;
+using CleanArchitecture.Persistance.Repositories;
+using CleanArchitecture.Persistance.Services;
 using CleanArchitecture.WebApi.Middleware;
+using FluentValidation;
+using GenericRepository;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ICarService, CarService>();
 
 builder.Services.AddTransient<ExceptionMiddleware>();
+
+builder.Services.AddScoped<IUnitOfWork>(srv => srv.GetRequiredService<AppDbContext>());
+builder.Services.AddScoped<ICarRepository,CarRepository>();
 
 builder.Services.AddAutoMapper(typeof
     (CleanArchitecture.Persistance.AssemblyReferance).Assembly);
