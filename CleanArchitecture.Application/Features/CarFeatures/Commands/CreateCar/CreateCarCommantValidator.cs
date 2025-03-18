@@ -5,9 +5,9 @@ using System.Text;
 
 namespace CleanArchitecture.Application.Features.CarFeatures.Commands.CreateCar
 {
-    public sealed class CreateCarCommentValidator : AbstractValidator<CreateCarCommand>
+    public sealed class CreateCarCommantValidator : AbstractValidator<CreateCarCommand>
     {
-        public CreateCarCommentValidator()
+        public CreateCarCommantValidator()
         {
             RuleFor(p => p.Name).NotEmpty().WithMessage("Araç adı boş olamaz");
             RuleFor(p => p.Name).NotNull().WithMessage("Araç adı boş olamaz");

@@ -16,11 +16,12 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<ICarService, CarService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddTransient<ExceptionMiddleware>();
-
 builder.Services.AddScoped<IUnitOfWork>(srv => srv.GetRequiredService<AppDbContext>());
-builder.Services.AddScoped<ICarRepository,CarRepository>();
+
+builder.Services.AddScoped<ICarRepository, CarRepository>();
 
 builder.Services.AddAutoMapper(typeof
     (CleanArchitecture.Persistance.AssemblyReferance).Assembly);
@@ -29,16 +30,18 @@ string connectionString = builder.Configuration.GetConnectionString("SqlServer")
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddIdentity<User,IdentityRole>().AddEntityFrameworkStores<AppDbContext>();// User artýk bizim AppDbContext Balandýgýný gösteriyot
-
-
-// Add services to the container. Assembyl refers to the CleanArchitecture.Presentation project
+builder.Services.AddIdentity<User, IdentityRole>(options =>
+{
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 1;
+    options.Password.RequireUppercase = false;
+}).AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(CleanArchitecture.Presentation.AssemblyReference).Assembly);
 
 
-builder.Services.AddMediatR(cfr=>cfr.RegisterServicesFromAssembly(typeof(CleanArchitecture.Application.AssemblyReferance).Assembly));
+builder.Services.AddMediatR(cfr => cfr.RegisterServicesFromAssembly(typeof(CleanArchitecture.Application.AssemblyReferance).Assembly));
 
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
