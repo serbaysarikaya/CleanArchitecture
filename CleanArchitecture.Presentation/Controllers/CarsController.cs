@@ -5,11 +5,13 @@ using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Presentation.Abstraction;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Pagination;
 
 namespace CleanArchitecture.Presentation.Controllers
 {
     public sealed class CarsController : ApiController
     {
+
         public CarsController(IMediator mediator) : base(mediator) { }
 
         [HttpPost("[action]")]
@@ -23,7 +25,8 @@ namespace CleanArchitecture.Presentation.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> GetAll(GetAllCarQuery request, CancellationToken cancellationToken)
         {
-            IList<Car> response = await _mediator.Send(request, cancellationToken);
+
+            PaginationResult<Car> response = await _mediator.Send(request, cancellationToken);
             return Ok(response);
         }
 
