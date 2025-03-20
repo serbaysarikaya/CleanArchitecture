@@ -1,10 +1,6 @@
 ﻿using CleanArchitecture.Application.Services;
 using GenericEmailService;
-
-using System;
-using System.Collections.Generic;
 using System.Net.Mail;
-using System.Text;
 
 namespace CleanArchitecture.Infrastructure.Services
 {
@@ -28,7 +24,7 @@ namespace CleanArchitecture.Infrastructure.Services
                 Body: body
             );
 
-          
+            await Task.CompletedTask;
        //     await EmailService.SendEmailWithNetAsync(emailModel);
         }
     }
