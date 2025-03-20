@@ -10,7 +10,7 @@ namespace CleanArchitecture.Infrastructure.Services
 {
     public class MailService : IMailService
     {
-        public async Task SendMailAsync(List<string> emails, string body, string subject, List<Attachment>? attachments=null)
+        public async Task SendMailAsync(List<string> emails, string body, string subject, List<Attachment> attachments=null)
         {
             var emailConfig = new EmailConfigurations(
           Smtp: "",
@@ -28,8 +28,8 @@ namespace CleanArchitecture.Infrastructure.Services
                 Body: body
             );
 
-            //await EmailService.SendEmailWithNetAsync(emailModel);
-
+          
+       //     await EmailService.SendEmailWithNetAsync(emailModel);
         }
     }
 }
