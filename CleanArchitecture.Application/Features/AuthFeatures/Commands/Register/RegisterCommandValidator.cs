@@ -5,9 +5,9 @@ using System.Text;
 
 namespace CleanArchitecture.Application.Features.AuthFeatures.Commands.Register
 {
-    public sealed class RegisterCommantValidator : AbstractValidator<RegisterCommand>
+    public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand>
     {
-        public RegisterCommantValidator()
+        public RegisterCommandValidator()
         {
             RuleFor(p => p.Email).NotEmpty().WithMessage("Email boş olamaz");
             RuleFor(p => p.Email).NotNull().WithMessage("Email boş olamaz");

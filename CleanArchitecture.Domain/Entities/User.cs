@@ -9,5 +9,7 @@ namespace CleanArchitecture.Domain.Entities
             Id = Guid.NewGuid().ToString();
         }
         public string NameLastname { get; set; }
+        public string RefrehToken { get; set; }
+        public DateTime? RefreshTokenExpires { get; set; }
     }
 }
